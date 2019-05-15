@@ -12,8 +12,10 @@ import os
 
 try:  # Python 3
     import urllib.parse as urlparse
+    import urllib as unquote
 except ImportError:  # Python 2
     from urllib2 import urlparse
+    from urllib2 import unquote
 
 save = [".mp3", ".flac", ".wma", ".ogg"]  # Don't delete dir if it contains any of these files.
 exts = [".tqd"]  # Other extensions to delete with same base name.
@@ -45,6 +47,12 @@ def main():
     basext = baselist[1]
     exts.append(basext)
 
+    path = urlparse.urlparse(location).path
+    retcode = subprocess.call(['kdialog', '--title', 'Delete currently playing file', '--yesno', 'Move %s to trash?' % unquote(path)])
+    if retcode > 0:
+        log.info('Action cancelled')
+        sys.exit(0)
+
     is_last_track = tracklist.GetLength() == 1
     if not is_last_track:
         player.Next()
@@ -67,12 +75,13 @@ def main():
         path = urlparse.urlparse(loc).path
         if retcodext == 0:
             log.info('Successfully trashed "%s"' % path)
+            subprocess.call(['kdialog', '--title', 'Music deleted', '--passivepopup', 'Successfully trashed "%s"' % unquote(path), '10'])
         else:
             log.warn('Could not trash"%s"' % path)
 
     direc = os.path.split(path)[0]  # If the dir is empty let's get rid of it, as well.
     subdir = ''  # We'll set this below, if it exists.
-    direc = direc.replace("%20", ' ')  # Replace KDE's sillyness.
+    direc = unquote(direc)  # Replace KDE's sillyness.
     # The following for loops seem a bit ugly, but this seems quicker than using recursion and ending up many levels deep,
     # and the various exists are off-putting, but we want to exit asap if we can.
     for f in os.listdir(direc):
