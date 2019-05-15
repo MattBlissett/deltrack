@@ -18,7 +18,8 @@ except ImportError:  # Python 2
     from urllib2 import unquote
 
 save = [".mp3", ".flac", ".wma", ".ogg"]  # Don't delete dir if it contains any of these files.
-exts = [".tqd"]  # Other extensions to delete with same base name.
+exts = ['.mood']  # Other extensions to delete with same base name.
+pres = ['', '.']
 
 log = logging.getLogger(__name__)
 
@@ -67,17 +68,19 @@ def main():
         tracklist.DelTrack(0)
 
     path = ''
-    for ext in exts:  # Delete each basename+extension.
-        loc = ''.join([basename, ext])
-        cmdext = ['kioclient', 'move', loc, 'trash:/']
-        log.info("Running %s" % ' '.join(cmdext))
-        retcodext = subprocess.call(cmdext)
-        path = urlparse.urlparse(loc).path
-        if retcodext == 0:
-            log.info('Successfully trashed "%s"' % path)
-            subprocess.call(['kdialog', '--title', 'Music deleted', '--passivepopup', 'Successfully trashed "%s"' % unquote(path), '10'])
-        else:
-            log.warn('Could not trash"%s"' % path)
+    for pre in pres:
+        for ext in exts:  # Delete each basename+extension.
+            loc = ''.join([basename, ext])
+            loc = rreplace(loc, '/', ''.join(['/', pre]), 1)
+            cmdext = ['kioclient', 'move', loc, 'trash:/']
+            log.info("Running %s" % ' '.join(cmdext))
+            retcodext = subprocess.call(cmdext)
+            path = urlparse.urlparse(loc).path
+            if retcodext == 0:
+                log.info('Successfully trashed "%s"' % path)
+                subprocess.call(['kdialog', '--title', 'Music deleted', '--passivepopup', 'Successfully trashed "%s"' % unquote(path), '10'])
+            else:
+                log.warn('Could not trash"%s"' % path)
 
     direc = os.path.split(path)[0]  # If the dir is empty let's get rid of it, as well.
     subdir = ''  # We'll set this below, if it exists.
@@ -111,6 +114,8 @@ def main():
 
     sys.exit(0)
 
+def rreplace(s, old, new, count):
+    return (s[::-1].replace(old[::-1], new[::-1], count))[::-1]
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(levelname)s %(message)s')
