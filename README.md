@@ -1,4 +1,4 @@
-Deltrack is a simple script that moves the currently playing track to trash.
+Deltrack is a simple script that moves the currently playing track to trash.  It works with the [Clementine](https://clementine-player.org/) music player, but would be easily modified to work on other Linux media players.
 
 Increase the quality of your music collection by assigning a global shortcut to this script. :)
 
@@ -8,13 +8,13 @@ Installation
 Copy `deltrack.py` to $HOME/bin
 
     mkdir -p $HOME/bin
-    wget -O $HOME/bin/deltrack.py https://raw.githubusercontent.com/felixhummel/deltrack/master/deltrack.py
+    wget -O $HOME/bin/deltrack.py https://raw.githubusercontent.com/MattBlissett/deltrack/master/deltrack.py
     chmod +x $HOME/bin/deltrack.py
 
 and install the input actions:
 
-- go to System Settings --> Input Actions
-- in the lower left: Edit --> Import --> select "input_actions.khotkeys"
+- go to System Settings → Input Actions
+- in the lower left: Edit → Import → select "input_actions.khotkeys"
 - (optional) Edit the shortcut to your choice. Default: "Win+Alt+d" (Win == Meta).
 - (optional) Edit the command if you copied `deltrack.py` somewhere else.
 
@@ -26,7 +26,7 @@ Alternative Installation with Launcher
 - right-click the "Application Laucher" (blue K, in the lower left corner)
 - select "Menu Editor"
 - click "New Item" and give it a name (like "delete current track")
-- Command: "python $HOME/bin/deltrack.py" (without quotes)
+- Command: `$HOME/bin/deltrack.py`
 - untick "Enable launch feedback"
 - open the "Advanced" tab (ALT+A)
 - click the "Current shortcut key" button and assign the shortcut
@@ -41,11 +41,11 @@ Slightly Advanced Config
 Requirements
 ============
 
-- python >= 2.5
+- python >= 3.5
 - amarok >= 2.0
 - KDE >= 4
 
-Author: Felix Hummel <deltrack@felixhummel.de>
+Author: Felix Hummel <deltrack@felixhummel.de>.  Modification to work with Clementine by Matthew Blissett <matt@blissett.me.uk>
 
 Thanks
 ======
